@@ -19,7 +19,11 @@ pipeline {
                 script {
                     def customers = ['customer1', 'customer2', 'customer3']
                     for (c in customers) {
-                        sh "docker run -d -p $((5000 + customers.indexOf(c))):5000 -e CUSTOMER=$c $IMAGE_NAME"
+                        // Use Groovy string interpolation for port calculation
+                        def port = 5000 + customers.indexOf(c)
+                        sh """
+                        docker run -d -p ${port}:5000 -e CUSTOMER=${c} ${IMAGE_NAME}
+                        """
                     }
                 }
             }
